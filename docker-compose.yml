@@ -1,0 +1,8 @@
+version: '3.9'
+services:
+  tracker:
+    build: ./
+    ports:
+      - "7070:7070"
+    environment:
+      - REDIRECT_URI=https://www.google.com/

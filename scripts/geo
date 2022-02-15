@@ -1,0 +1,11 @@
+#!/bin/bash
+ip_source=$1
+function hoplistgeo () {
+    mtr -r -n ${ip_source} | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | xargs -i geoiplookup {} | grep -v "can't\|not"
+}
+
+function ipinfo  () {
+    geoiplookup ${ip_source} 2>/dev/null | grep -v "can't\|not"
+}
+
+echo -e "\nip location\nTarget: ${ip_source}\n$(ipinfo)\nhop location:\n$(hoplistgeo)" >> /app/scripts/list.txt
