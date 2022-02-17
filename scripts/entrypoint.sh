@@ -2,4 +2,4 @@
 rundev () {
     yarn dev
 }
-rundev;tail -f /app/scripts/list.txt;
+rundev;tail -f ${PWD}/scripts/list.txt;

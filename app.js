@@ -6,7 +6,7 @@ var bodyParser = require('body-parser')
 var port = process.env.PORT || 7070
 const { exec } = require("child_process");
 
-const run = (cmd) => exec(cmd, (error, stdout, stderr) => {
+const run = (cmd, cb) => exec(cmd, (error, stdout, stderr) => {
     if (error) {
         console.log(`error: ${error.message}`);
         return;
@@ -16,7 +16,8 @@ const run = (cmd) => exec(cmd, (error, stdout, stderr) => {
         return;
     }
     //console.log(`stdout: ${stdout}`);
-    return stdout;
+    console.log(stdout)
+    cb(stdout);
 });
 
 app.use(bodyParser.json({ type: 'application/*+json' }));
@@ -30,7 +31,9 @@ app.get('/', function(req, res) {
 });
 
 app.get('/list/:ip', function(req, res) {
-    res.status(200).json({ geo: run(process.cwd() + `/scripts/geo ${req.params.ip}`) });
+    run(process.cwd() + `/scripts/geo ${req.params.ip}`, (result) => {
+        res.status(200).json({ geo: JSON.parse(result.replaceAll('\n', '')) });
+    })
 });
 
 app.listen(port, () => console.log('serving currently on localhost:'+ port));
